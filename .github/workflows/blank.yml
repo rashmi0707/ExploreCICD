@@ -7,15 +7,11 @@ name: CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 # Variables that are available for all the jobs in the workflow
 env:
-  SPPKG_FILE_NAME: 'LEGO.Handbook.sppkg'
-  DEPLOYMENT_SCRIPT: 'DeployAppToSite.ps1'
-  SITE_URL: 'https://in8rasgu.sharepoint.com/sites/Test3/'
-  APP_NAME: 'LEGO-Handbook'
+  DEPLOYMENT_SCRIPT: 'test.ps1'
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -28,34 +24,33 @@ jobs:
       # Checkout code
     - name: Checkout code
       uses: actions/checkout@v2
-      
-      # Setup node.js runtime
-    - name: Setup Node.js 10.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 10.x
-    
-       #npm install
-    - name: Run npm install
-      run: npm install
-      
-       # gulp build
-    - name: Build solution
-      run: gulp build
-      
-      # npm test     
-    - name: Test solution
-      run: npm test
-      
-      # gulp bundle and package solution
-    - name: Bundle and package
-      run: |
-        gulp bundle --ship
-        gulp package-solution --ship
         
-      # upload build package    
-    - name: Upload Build Package
+    # upload deployment script    
+    - name: Upload deployment script
       uses: actions/upload-artifact@v2
       with:
-        name: buildPackage
-        path: sharepoint/solution/${{env.SPPKG_FILE_NAME}}  
+        name: deploymentScript
+        path: ${{env.DEPLOYMENT_SCRIPT}} 
+
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    needs: [build]
+    
+    steps:     
+      - name: Download a Deployment Script
+        uses: actions/download-artifact@v2
+        id: packageDownloadStep
+        with:
+          name: deploymentScript
+          path: deploymentScript 
+        
+          
+      - name: Print package download path
+        run: echo ${{steps.packageDownloadStep.outputs.download-path}}
+        
+      - name: Run script to install PnP Powershell and deploy app on site using PnP Powershell
+        run: deploymentScript/${{env.DEPLOYMENT_SCRIPT}}
+        shell: powershell
+        
+      
