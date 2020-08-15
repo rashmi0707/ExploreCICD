@@ -8,8 +8,8 @@ on:
   push:
     branches: 
       - master
-        - betaRelease
-          - dev
+      - betaRelease
+      - dev
 
 # Variables that are available for all the jobs in the workflow
 env:
