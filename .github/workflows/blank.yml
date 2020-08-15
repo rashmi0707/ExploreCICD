@@ -7,7 +7,6 @@ name: CI/CD
 on:
   push:
     branches: 
-      - master
       - betaRelease
       - dev
 
