@@ -8,8 +8,8 @@ on:
   push:
     branches: 
       - master
-        - betaRelease
-          -dev
+      - betaRelease
+      - dev
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
