@@ -6,7 +6,10 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: 
+      - master
+        - betaRelease
+          - dev
 
 # Variables that are available for all the jobs in the workflow
 env:
@@ -32,25 +35,39 @@ jobs:
         name: deploymentScript
         path: ${{env.DEPLOYMENT_SCRIPT}} 
 
-  deploy:
+  deployOnBeta:
     # The type of runner that the job will run on
     runs-on: windows-latest
     needs: [build]
-    
-    steps:     
-      - name: Download a Deployment Script
-        uses: actions/download-artifact@v2
-        id: packageDownloadStep
-        with:
-          name: deploymentScript
-          path: deploymentScript 
-        
-          
-      - name: Print package download path
-        run: echo ${{steps.packageDownloadStep.outputs.download-path}}
-        
-      - name: Run script to install PnP Powershell and deploy app on site using PnP Powershell
-        run: deploymentScript/${{env.DEPLOYMENT_SCRIPT}}
-        shell: powershell
-        
+    if: github.ref == 'refs/heads/betaRelease'
+    env:
+      SITES: 'BetaBranch'
+      
+    steps:
+        - name: Print package download path
+          run: echo ${{env.SITES}}
+  
+  deployOnMaster:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/master'
+    env:
+      SITES: 'master branch'
+      
+    steps:
+        - name: Print package download path
+          run: echo ${{env.SITES}}
+
+  deployOnDev:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/Dev'
+    env:
+      SITES: 'Dev branch'
+      
+    steps:
+        - name: Print package download path
+          run: echo ${{env.SITES}}
       
