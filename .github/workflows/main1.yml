@@ -1,0 +1,73 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI/CD
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: 
+      - master
+        - betaRelease
+          - dev
+
+# Variables that are available for all the jobs in the workflow
+env:
+  DEPLOYMENT_SCRIPT: 'test.ps1'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v2
+        
+    # upload deployment script    
+    - name: Upload deployment script
+      uses: actions/upload-artifact@v2
+      with:
+        name: deploymentScript
+        path: ${{env.DEPLOYMENT_SCRIPT}} 
+
+  deployOnBeta:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/betaRelease'
+    env:
+      SITES: 'BetaBranch'
+      
+    steps:
+        - name: Print package download path
+          run: echo ${{env.SITES}}
+  
+  deployOnMaster:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/master'
+    env:
+      SITES: 'master branch'
+      
+    steps:
+        - name: Print package download path
+          run: echo ${{env.SITES}}
+
+  deployOnDev:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/Dev'
+    env:
+      SITES: 'Dev branch'
+      
+    steps:
+        - name: Print package download path
+          run: echo ${{env.SITES}}
+      
