@@ -31,3 +31,4 @@ jobs:
         echo ${{github.event_sha}}
         echo ${{github.workspace}}
         echo ${{github.workflow}}
+        echo ${{working-directory}}
