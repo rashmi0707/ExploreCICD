@@ -10,6 +10,7 @@ on:
       - master
       - dev
       - betaRelease
+  
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -30,5 +31,4 @@ jobs:
         echo ${{github.event_path}}
         echo ${{github.event_sha}}
         echo ${{github.workspace}}
-        echo ${{github.workflow}}
-        echo ${{working-directory}}
+        echo ${{github.event}}
