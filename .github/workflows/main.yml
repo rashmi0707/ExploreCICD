@@ -25,4 +25,6 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Run a one-line script
-      run: echo ${{github.action_path}}
+      run: | 
+        echo ${{github.action_path}}
+        echo ${{github.event_path}}
