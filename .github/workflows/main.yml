@@ -30,3 +30,4 @@ jobs:
         echo ${{github.event_path}}
         echo ${{github.event_sha}}
         echo ${{github.workspace}}
+        echo ${{github.workflow}}
