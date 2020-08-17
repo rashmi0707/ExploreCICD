@@ -28,3 +28,4 @@ jobs:
       run: | 
         echo ${{github.action_path}}
         echo ${{github.event_path}}
+        echo ${{github.event_sha}}
