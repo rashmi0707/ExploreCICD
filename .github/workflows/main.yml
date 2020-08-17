@@ -29,3 +29,4 @@ jobs:
         echo ${{github.action_path}}
         echo ${{github.event_path}}
         echo ${{github.event_sha}}
+        echo ${{github.workspace}}
