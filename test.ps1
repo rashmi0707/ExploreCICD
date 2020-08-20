@@ -1,4 +1,4 @@
-varSites=$SITES
+$varSites=$SITES
 try{
         Install-Module -Name SharePointPnPPowerShellOnline -Force -Verbose -Scope CurrentUser  
 	Write-Output "Connecting on created, installing app on site..." 
